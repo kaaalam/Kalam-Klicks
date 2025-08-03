@@ -9,14 +9,23 @@ import Foundation
 import AVFoundation
 
 class CameraOutputManager : ObservableObject {
-    @Published var cameraModel = CameraModel()
+    @Published var captureModel = CaptureModel()
     var session: AVCaptureSession {
-        return cameraModel.getCaptureSession()
+        return captureModel.getCaptureSession()
     }
     func startSession() {
-        cameraModel.startSession()
+        captureModel.startSession()
     }
     func stopSession() {
-        cameraModel.stopSession()
+        captureModel.stopSession()
+    }
+    func takePhoto() {
+        captureModel.takePhoto { image in
+            if let image = image {
+                print("captured photo")
+            } else {
+                print("could not take photo")
+            }
+        }
     }
 }

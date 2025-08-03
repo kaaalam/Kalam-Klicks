@@ -19,6 +19,11 @@ struct ContentView: View {
             .onDisappear() {
                 cameraOutputManager.stopSession()
             }
+            Button(action: {
+                cameraOutputManager.takePhoto()
+            }) {
+                Text("Capture Photo")
+            }
         }
     }
 }
