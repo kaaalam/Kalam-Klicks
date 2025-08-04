@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Photos
 struct ContentView: View {
     @StateObject private var cameraOutputManager = CameraOutputManager()
     var body: some View {
@@ -14,15 +14,17 @@ struct ContentView: View {
             VideoPreviewView(session: cameraOutputManager.session)
             .ignoresSafeArea()
             .onAppear() {
-                cameraOutputManager.startSession()
+                
             }
             .onDisappear() {
-                cameraOutputManager.stopSession()
+                
             }
             Button(action: {
-                cameraOutputManager.takePhoto()
+                cameraOutputManager.isRecording ? cameraOutputManager.stopCapture() : cameraOutputManager.startCapture()
             }) {
-                Text("Capture Photo")
+                Image(systemName: cameraOutputManager.isRecording ? "camera.circle.fill" : "camera.circle")
+                .frame(width: 60, height: 60)
+                .foregroundColor(cameraOutputManager.isRecording ? .red : .green)
             }
         }
     }
