@@ -47,13 +47,12 @@ class CaptureModel : NSObject {
     func startCapture() {
         captureHandler?.startCapture()
     }
-    func stopSession() {
+    func stopCapture() {
         captureHandler?.stopCapture()
     }
     func setHandler(handler: any CaptureHandler) {
         self.captureHandler = handler
     }
-    //MARK: PRIVATE FUNCTIONS
 
 }
 

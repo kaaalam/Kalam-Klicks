@@ -8,9 +8,12 @@
 import SwiftUI
 import Photos
 struct ContentView: View {
-    @StateObject private var cameraOutputManager = CameraOutputManager()
+    @EnvironmentObject var cameraOutputManager: CameraOutputManager
+    @EnvironmentObject var settings : Settings
+
+    @State var isShowingSettings = false
     var body: some View {
-        ZStack {
+        VStack {
             VideoPreviewView(session: cameraOutputManager.session)
             .ignoresSafeArea()
             .onAppear() {
@@ -19,12 +22,41 @@ struct ContentView: View {
             .onDisappear() {
                 
             }
-            Button(action: {
-                cameraOutputManager.isRecording ? cameraOutputManager.stopCapture() : cameraOutputManager.startCapture()
-            }) {
-                Image(systemName: cameraOutputManager.isRecording ? "camera.circle.fill" : "camera.circle")
-                .frame(width: 60, height: 60)
-                .foregroundColor(cameraOutputManager.isRecording ? .red : .green)
+            Spacer()
+            HStack {
+                Button(action: {
+                    isShowingSettings = true
+                }) {
+                    Image(systemName:"gear")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .foregroundColor(.gray)
+                }
+                .onChange(of: settings.captureMode) { newMode in
+                    cameraOutputManager.changeCaptureType()
+                }
+                .sheet(isPresented: $isShowingSettings) {
+                    SettingsView(settings: settings)
+                }
+                Spacer()
+                Button(action: {
+                    switch settings.captureMode {
+                    case CaptureMode.photo.rawValue:
+                        cameraOutputManager.startCapture()
+                    case CaptureMode.video.rawValue:
+                        cameraOutputManager.isRecording ? cameraOutputManager.stopCapture() : cameraOutputManager.startCapture()
+                    default:
+                        cameraOutputManager.startCapture()
+                    }
+
+                }) {
+                    Image(systemName: cameraOutputManager.isRecording ? "camera.circle.fill" : "camera.circle")
+                    .resizable()
+                    .frame(width: 60, height: 60)
+                
+                    .foregroundColor(cameraOutputManager.isRecording ? .red : .green)
+                }
+                Spacer()
             }
         }
     }

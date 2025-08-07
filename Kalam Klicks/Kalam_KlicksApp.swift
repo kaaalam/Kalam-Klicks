@@ -9,9 +9,20 @@ import SwiftUI
 
 @main
 struct Kalam_KlicksApp: App {
+ 
+    @StateObject private var settings = Settings()
+    @StateObject private var cameraManager: CameraOutputManager
+    init() {
+        let settings = Settings()
+        _settings = StateObject(wrappedValue: settings)
+        _cameraManager = StateObject(wrappedValue: CameraOutputManager(settings: settings))
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(settings)
+                .environmentObject(cameraManager)
         }
     }
 }

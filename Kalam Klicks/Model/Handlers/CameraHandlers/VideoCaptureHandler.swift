@@ -53,6 +53,10 @@ class VideoCaptureHandler : NSObject {
             print("could not add asset writer input")
             return
         }
+        /*
+         Apple recommends not rotating the frame directly to avoid performance issues. "You can rotate the video of a movie file you record with an AVAssetWriter instance by applying the rotation to an AVAssetWriterInput instance’s transform property. This approach avoids the performance costs that come with rotating each video frame." https://developer.apple.com/documentation/avfoundation/avcaptureconnection/videorotationangle
+         */
+        assetWriterInput.transform = getVideoTransform()
         assetWriter.add(assetWriterInput)
         assetWriter.startWriting()
     }
